@@ -1,0 +1,31 @@
+mybatisGenerator:
+    datasource:
+        url: jdbc:mysql://35.234.41.130:3306/JS_mysql_db
+        username: root
+        password: Woshixxf666
+
+    targetPackage:
+        model: com.example.model
+        javaMapper: com.example.mapper
+        xmlMapper: com.example.mapper
+
+    mapperConfig:
+        comment: true
+        lombok: true
+        swagger: true
+
+        mapperSuffixName: dao
+        mode: mybatis3
+
+        enableCountByExample: false
+        enableUpdateByExample: false
+        enableDeleteByExample: false
+        enableSelectByExample: false
+        selectByExampleQueryId: false
+
+    tables:
+        - fence
+        - user
+
+
+
