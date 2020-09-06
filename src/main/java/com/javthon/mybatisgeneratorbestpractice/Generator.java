@@ -1,5 +1,6 @@
 package com.javthon.mybatisgeneratorbestpractice;
 
+import com.javthon.mybatisgeneratorbestpractice.utils.XMLUtil;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.Context;
@@ -14,6 +15,8 @@ public class Generator {
         List<String> warnings = new ArrayList<>();
         boolean overwrite = true;
         ConfigurationParser cp = new ConfigurationParser(warnings);
+        XMLUtil creatXml = new XMLUtil();
+        creatXml.createXML();
         Configuration config = cp.parseConfiguration(Generator.class.getClassLoader().getResourceAsStream("config/test.xml"));
         // 解决IDEA下运行，多个模块路径冲突问题
         String cpath = Generator.class.getClassLoader().getResource("config/test.xml").toString();

@@ -5,27 +5,26 @@ mybatisGenerator:
         password: Woshixxf666
 
     targetPackage:
-        model: com.example.model
-        javaMapper: com.example.mapper
-        xmlMapper: com.example.mapper
+        model: com.example.domain
+        javaMapper: com.example.dao
+        xmlMapper: com.example.dao
 
     mapperConfig:
         comment: true
         lombok: true
-        swagger: true
+        swagger: false
 
         mapperSuffixName: dao
         mode: mybatis3
 
         enableCountByExample: false
-        enableUpdateByExample: false
+        enableUpdateByExample: true
         enableDeleteByExample: false
-        enableSelectByExample: false
+        enableSelectByExample: true
         selectByExampleQueryId: false
 
     tables:
         - fence
-        - user
 
 
 

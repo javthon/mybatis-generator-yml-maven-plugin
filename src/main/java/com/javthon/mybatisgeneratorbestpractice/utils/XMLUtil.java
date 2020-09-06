@@ -66,6 +66,7 @@ public class XMLUtil {
         tableConfig.put("selectByExampleQueryId",String.valueOf(selectByExampleQueryId));
 
         List<String> tables = ( List<String>) objectMap.get("tables");
+
         //  swagger
         if(swagger){
             appendSwaggerPlugin(document,context);
@@ -73,10 +74,12 @@ public class XMLUtil {
         if(lombok){
             appendLombokPlugin(document,context);
         }
-        if(comment){
-            appendCommentPlugin(document,context);
-        }
 
+//        if(comment){
+//            appendCommentPlugin(document,context);
+//        }
+
+        disableDefaultComment(document,context);
         ///////mysql////////////
         Map<String, Object> datasource = (Map<String, Object>)objectMap.get("datasource");
         String url = (String) datasource.get("url");
@@ -84,6 +87,7 @@ public class XMLUtil {
         String password = String.valueOf(datasource.get("password"));
         appendConnectionConfig(document,context,url,username,password);
         ///////mysql////////////
+        setJavaTypeResolver(document,context);
 
         ///////targetPackage/////////
         Map<String, Object> targetPackage = (Map<String, Object>) objectMap.get("targetPackage");
@@ -182,6 +186,32 @@ public class XMLUtil {
         pluginSwagger.setAttribute("userId",user);
         pluginSwagger.setAttribute("password",password);
         context.appendChild(pluginSwagger);
+    }
+
+    public void disableDefaultComment(Document document, Element context){
+        Element temp = document.createElement("commentGenerator");
+        Element temp1 = document.createElement("property");
+        temp1.setAttribute("name","suppressAllComments");
+        temp1.setAttribute("value","true");
+        Element temp2 = document.createElement("property");
+        temp2.setAttribute("name","suppressDate");
+        temp2.setAttribute("value","true");
+        temp.appendChild(temp1);
+        temp.appendChild(temp2);
+
+        context.appendChild(temp);
+    }
+    public void setJavaTypeResolver(Document document, Element context){
+        Element temp3 = document.createElement("javaTypeResolver");
+        Element temp4 = document.createElement("property");
+        temp4.setAttribute("name","forceBigDecimals");
+        temp4.setAttribute("value","false");
+        Element temp5 = document.createElement("property");
+        temp5.setAttribute("name","useJSR310Types");
+        temp5.setAttribute("value","true");
+        temp3.appendChild(temp4);
+        temp3.appendChild(temp5);
+        context.appendChild(temp3);
     }
 
     public void appendTargetPackage(Document document, Element context,String modelPackage, String javaMapperPackage, String xmlMapperPackage){
