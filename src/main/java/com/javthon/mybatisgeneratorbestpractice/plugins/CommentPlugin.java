@@ -33,5 +33,4 @@ public class CommentPlugin extends PluginAdapter {
     }
 
 
-
 }

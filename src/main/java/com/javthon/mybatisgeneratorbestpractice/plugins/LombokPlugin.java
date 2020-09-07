@@ -20,10 +20,10 @@ public class LombokPlugin extends PluginAdapter {
 
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        //添加domain的import
+        //add lombok import
         topLevelClass.addImportedType("lombok.Data");
 
-        //添加domain的注解
+        //add domain的注解
         topLevelClass.addAnnotation("@Data");
 
         topLevelClass.addJavaDocLine("/**");
@@ -51,23 +51,15 @@ public class LombokPlugin extends PluginAdapter {
     }
 
 
-    public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        //添加Mapper的import
-        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Mapper"));
-        //添加Mapper的注解
-        interfaze.addAnnotation("@Mapper");
-        return true;
-    }
-
     @Override
     public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        //不生成getter
+        //does not generate getter
         return false;
     }
 
     @Override
     public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        //不生成setter
+        //does not generate setter
         return false;
     }
 

@@ -19,6 +19,9 @@ mybatisGenerator:
         comment: false
         lombok: false
         swagger: true
+        #TODO
+        mapperAnnotation: true
+        serializable: true
 
     tables:
         - fence
