@@ -9,11 +9,11 @@ import java.io.InputStream;
 import java.util.Map;
 
 public class YmlUtil {
-    public static Map<String,Object> getObjectMapFromSource(){
+    public static Map<String,Object> getObjectMapFromSource(String filePath){
         Yaml yaml = new Yaml();
         InputStream is = null;
         try {
-             is=new FileInputStream(new File("D:\\projects\\mybatis-generator-bestpractice\\src\\main\\resources\\application.yml"));
+             is=new FileInputStream(new File(filePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -22,8 +22,8 @@ public class YmlUtil {
 
 
     public static void main(String[] args) {
-        Map<String, Object> source = YmlUtil.getObjectMapFromSource();
-        System.out.println(source);
+//        Map<String, Object> source = YmlUtil.getObjectMapFromSource();
+//        System.out.println(source);
     }
 
 

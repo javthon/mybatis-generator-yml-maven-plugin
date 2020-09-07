@@ -8,14 +8,6 @@
 			<property name="hasLombok" value="true"/>
 		</plugin>-->
 		<!-- 自动为entity生成swagger2文档-->
-		<plugin type="com.bscz.GeneratorSwagger2Doc">
-			<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel" />
-			<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty" />
-		</plugin>
-
-		<plugin type="com.bscz.MyBatisPlugin" >
-			<property name="hasLombok" value="true"/>
-		</plugin>
 
 		<commentGenerator>
 			<property name="suppressAllComments" value="true"/>

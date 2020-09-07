@@ -27,7 +27,7 @@ public class XMLUtil {
     /**
      * 生成xml
      */
-    public void createXML() throws ParserConfigurationException {
+    public void createXML(String ymlPath, String xmlPath) throws ParserConfigurationException {
         // Create document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -42,7 +42,7 @@ public class XMLUtil {
         context.setAttribute("id","simple");
         context.setAttribute("targetRuntime","MyBatis3");
 
-        Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource();
+        Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource(ymlPath);
         Map<String, Object> objectMap = (Map<String, Object>) objectMapFromSource.get("mybatisGenerator");
 
 
@@ -114,7 +114,7 @@ public class XMLUtil {
             tf.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, document.getDoctype().getPublicId());
             tf.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, document.getDoctype().getSystemId());
 
-            tf.transform(new DOMSource(document),new StreamResult(new File("D:\\projects\\mybatis-generator-bestpractice\\src\\main\\resources\\config\\test.xml")));
+            tf.transform(new DOMSource(document),new StreamResult(new File(xmlPath)));
         } catch (TransformerException e) {
             e.printStackTrace();
         }
@@ -181,7 +181,7 @@ public class XMLUtil {
 
     public void appendConnectionConfig(Document document, Element context, String url, String user, String password){
         Element pluginSwagger = document.createElement("jdbcConnection");
-        pluginSwagger.setAttribute("driverClass","com.mysql.jdbc.Driver");
+        pluginSwagger.setAttribute("driverClass","com.mysql.cj.jdbc.Driver");
         pluginSwagger.setAttribute("connectionURL",url);
         pluginSwagger.setAttribute("userId",user);
         pluginSwagger.setAttribute("password",password);
@@ -250,8 +250,8 @@ public class XMLUtil {
     }
 
     public static void main(String[] args) throws ParserConfigurationException {
-        XMLUtil creatXml = new XMLUtil();
-        creatXml.createXML();
+//        XMLUtil creatXml = new XMLUtil();
+//        creatXml.createXML();
     }
 
 }

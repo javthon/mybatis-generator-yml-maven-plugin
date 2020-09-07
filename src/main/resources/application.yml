@@ -10,11 +10,11 @@ mybatisGenerator:
         xmlMapper: com.example.dao
 
     mapperConfig:
-        comment: true
+        comment: false
         lombok: true
-        swagger: false
+        swagger: true
 
-        mapperSuffixName: dao
+        mapperSuffixName: mapper
         mode: mybatis3
 
         enableCountByExample: false
