@@ -43,16 +43,18 @@ public class XMLUtil {
         Map<String, Object> objectMap = (Map<String, Object>) objectMapFromSource.get("mybatisGenerator");
 
 
-        Map<String, Object> mapperConfig = (Map<String, Object>) objectMap.get("mapperConfig");
-        Boolean comment = (Boolean) mapperConfig.get("comment");
-        Boolean lombok = (Boolean) mapperConfig.get("lombok");
-        Boolean swagger = (Boolean) mapperConfig.get("swagger");
+        Map<String, Object> plugins = (Map<String, Object>) objectMap.get("plugins");
+        Boolean comment = (Boolean) plugins.get("comment");
+        Boolean lombok = (Boolean) plugins.get("lombok");
+        Boolean swagger = (Boolean) plugins.get("swagger");
 
-        String targetRuntime = (String) mapperConfig.get("targetRuntime");
+        String targetRuntime = (String) objectMap.get("targetRuntime");
         context.setAttribute("targetRuntime",targetRuntime);
 
 
-        String mapperSuffixName = (String) mapperConfig.get("mapperSuffixName");
+        String mapperSuffixName = (String) objectMap.get("mapperSuffixName");
+
+        Boolean java8 = (Boolean) objectMap.get("java8");
 
         List<String> tables = ( List<String>) objectMap.get("tables");
 
@@ -63,10 +65,9 @@ public class XMLUtil {
         if(lombok){
             appendLombokPlugin(document,context);
         }
-
-//        if(comment){
-//            appendCommentPlugin(document,context);
-//        }
+        if(comment){
+            appendCommentPlugin(document,context);
+        }
 
         disableDefaultComment(document,context);
         ///////mysql////////////
@@ -76,7 +77,7 @@ public class XMLUtil {
         String password = String.valueOf(datasource.get("password"));
         appendConnectionConfig(document,context,url,username,password);
         ///////mysql////////////
-        setJavaTypeResolver(document,context);
+        setJavaTypeResolver(document,context,java8);
 
         ///////targetPackage/////////
         Map<String, Object> targetPackage = (Map<String, Object>) objectMap.get("targetPackage");
@@ -165,7 +166,7 @@ public class XMLUtil {
         Element pluginSwagger = document.createElement("plugin");
         pluginSwagger.setAttribute("type","com.javthon.mybatisgeneratorbestpractice.plugins.CommentPlugin");
         Element pluginSwaggerProperty1 = document.createElement("property");
-        pluginSwaggerProperty1.setAttribute("name","hasLombok");
+        pluginSwaggerProperty1.setAttribute("name","hasComment");
         pluginSwaggerProperty1.setAttribute("value","true");
         pluginSwagger.appendChild(pluginSwaggerProperty1);
         context.appendChild(pluginSwagger);
@@ -194,14 +195,14 @@ public class XMLUtil {
 
         context.appendChild(temp);
     }
-    public void setJavaTypeResolver(Document document, Element context){
+    public void setJavaTypeResolver(Document document, Element context,Boolean java8){
         Element temp3 = document.createElement("javaTypeResolver");
         Element temp4 = document.createElement("property");
         temp4.setAttribute("name","forceBigDecimals");
         temp4.setAttribute("value","false");
         Element temp5 = document.createElement("property");
         temp5.setAttribute("name","useJSR310Types");
-        temp5.setAttribute("value","true");
+        temp5.setAttribute("value",String.valueOf(java8));
         temp3.appendChild(temp4);
         temp3.appendChild(temp5);
         context.appendChild(temp3);

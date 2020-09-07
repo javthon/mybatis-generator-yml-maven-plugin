@@ -9,14 +9,16 @@ mybatisGenerator:
         javaMapper: com.example.dao
         xmlMapper: com.example.dao
 
-    mapperConfig:
+    #MyBatis3DynamicSql, MyBatis3Simple, MyBatis3
+    targetRuntime: MyBatis3Simple
+    #mapper, dao or other
+    mapperSuffixName: dao
+    java8: true
+
+    plugins:
         comment: false
-        lombok: true
-        swagger: false
-        #MyBatis3DynamicSql, MyBatis3Simple, MyBatis3
-        targetRuntime: MyBatis3
-        #mapper, dao or other
-        mapperSuffixName: dao
+        lombok: false
+        swagger: true
 
     tables:
         - fence
