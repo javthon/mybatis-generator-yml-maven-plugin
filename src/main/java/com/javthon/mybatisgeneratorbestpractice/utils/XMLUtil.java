@@ -40,7 +40,7 @@ public class XMLUtil {
         //向bookstore根节点中添加子节点book
         Element context = document.createElement("context");
         context.setAttribute("id","simple");
-        context.setAttribute("targetRuntime","MyBatis3");
+
 
         Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource(ymlPath);
         Map<String, Object> objectMap = (Map<String, Object>) objectMapFromSource.get("mybatisGenerator");
@@ -51,19 +51,22 @@ public class XMLUtil {
         Boolean lombok = (Boolean) mapperConfig.get("lombok");
         Boolean swagger = (Boolean) mapperConfig.get("swagger");
 
-        Boolean enableCountByExample = (Boolean) mapperConfig.get("enableCountByExample");
-        Boolean enableUpdateByExample = (Boolean) mapperConfig.get("enableUpdateByExample");
-        Boolean enableDeleteByExample = (Boolean) mapperConfig.get("enableDeleteByExample");
-        Boolean enableSelectByExample = (Boolean) mapperConfig.get("enableSelectByExample");
-        Boolean selectByExampleQueryId = (Boolean) mapperConfig.get("selectByExampleQueryId");
+        String targetRuntime = (String) mapperConfig.get("targetRuntime");
+        context.setAttribute("targetRuntime",targetRuntime);
+
+//        Boolean enableCountByExample = (Boolean) mapperConfig.get("enableCountByExample");
+//        Boolean enableUpdateByExample = (Boolean) mapperConfig.get("enableUpdateByExample");
+//        Boolean enableDeleteByExample = (Boolean) mapperConfig.get("enableDeleteByExample");
+//        Boolean enableSelectByExample = (Boolean) mapperConfig.get("enableSelectByExample");
+//        Boolean selectByExampleQueryId = (Boolean) mapperConfig.get("selectByExampleQueryId");
 
         String mapperSuffixName = (String) mapperConfig.get("mapperSuffixName");
-        Map<String,String> tableConfig = new HashMap<>();
-        tableConfig.put("enableCountByExample",String.valueOf(enableCountByExample));
-        tableConfig.put("enableUpdateByExample",String.valueOf(enableUpdateByExample));
-        tableConfig.put("enableDeleteByExample",String.valueOf(enableDeleteByExample));
-        tableConfig.put("enableSelectByExample",String.valueOf(enableSelectByExample));
-        tableConfig.put("selectByExampleQueryId",String.valueOf(selectByExampleQueryId));
+//        Map<String,String> tableConfig = new HashMap<>();
+//        tableConfig.put("enableCountByExample",String.valueOf(enableCountByExample));
+//        tableConfig.put("enableUpdateByExample",String.valueOf(enableUpdateByExample));
+//        tableConfig.put("enableDeleteByExample",String.valueOf(enableDeleteByExample));
+//        tableConfig.put("enableSelectByExample",String.valueOf(enableSelectByExample));
+//        tableConfig.put("selectByExampleQueryId",String.valueOf(selectByExampleQueryId));
 
         List<String> tables = ( List<String>) objectMap.get("tables");
 
@@ -97,7 +100,7 @@ public class XMLUtil {
         appendTargetPackage(document,context,model,javaMapper,xmlMapper);
         ///////targetPackage/////////
 
-        appendTables(document,context,tables,mapperSuffixName,tableConfig);
+        appendTables(document,context,tables,mapperSuffixName);
         bookstore.appendChild(context);
 
 
@@ -234,14 +237,14 @@ public class XMLUtil {
     }
 
 
-    public void appendTables(Document document, Element context, List<String> tableNames, String mapperSuffixName, Map<String,String> map){
+    public void appendTables(Document document, Element context, List<String> tableNames, String mapperSuffixName){
         for(String tableName : tableNames){
             Element pluginSwagger = document.createElement("table");
             pluginSwagger.setAttribute("tableName",tableName);
-            Set<String> keys = map.keySet();
-            for(String key : keys){
-                pluginSwagger.setAttribute(key,map.get(key));
-            }
+//            Set<String> keys = map.keySet();
+//            for(String key : keys){
+//                pluginSwagger.setAttribute(key,map.get(key));
+//            }
             String mapperName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName)+CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapperSuffixName);
             pluginSwagger.setAttribute("mapperName",mapperName);
             context.appendChild(pluginSwagger);
