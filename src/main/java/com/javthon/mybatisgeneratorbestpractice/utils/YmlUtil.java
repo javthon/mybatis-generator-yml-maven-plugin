@@ -21,10 +21,4 @@ public class YmlUtil {
     }
 
 
-    public static void main(String[] args) {
-//        Map<String, Object> source = YmlUtil.getObjectMapFromSource();
-//        System.out.println(source);
-    }
-
-
 }

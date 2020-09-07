@@ -12,17 +12,11 @@ mybatisGenerator:
     mapperConfig:
         comment: false
         lombok: true
-        swagger: true
+        swagger: false
         #MyBatis3DynamicSql, MyBatis3Simple, MyBatis3
         targetRuntime: MyBatis3
         #mapper, dao or other
         mapperSuffixName: dao
-
-#        enableCountByExample: false
-#        enableUpdateByExample: false
-#        enableDeleteByExample: false
-#        enableSelectByExample: false
-#        selectByExampleQueryId: false
 
     tables:
         - fence

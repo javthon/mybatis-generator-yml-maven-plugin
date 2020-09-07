@@ -9,13 +9,10 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +24,7 @@ public class XMLUtil {
     /**
      * 生成xml
      */
-    public void createXML(String ymlPath, String xmlPath) throws ParserConfigurationException {
+    public InputStream createXML(String ymlPath) throws ParserConfigurationException {
         // Create document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -54,19 +51,8 @@ public class XMLUtil {
         String targetRuntime = (String) mapperConfig.get("targetRuntime");
         context.setAttribute("targetRuntime",targetRuntime);
 
-//        Boolean enableCountByExample = (Boolean) mapperConfig.get("enableCountByExample");
-//        Boolean enableUpdateByExample = (Boolean) mapperConfig.get("enableUpdateByExample");
-//        Boolean enableDeleteByExample = (Boolean) mapperConfig.get("enableDeleteByExample");
-//        Boolean enableSelectByExample = (Boolean) mapperConfig.get("enableSelectByExample");
-//        Boolean selectByExampleQueryId = (Boolean) mapperConfig.get("selectByExampleQueryId");
 
         String mapperSuffixName = (String) mapperConfig.get("mapperSuffixName");
-//        Map<String,String> tableConfig = new HashMap<>();
-//        tableConfig.put("enableCountByExample",String.valueOf(enableCountByExample));
-//        tableConfig.put("enableUpdateByExample",String.valueOf(enableUpdateByExample));
-//        tableConfig.put("enableDeleteByExample",String.valueOf(enableDeleteByExample));
-//        tableConfig.put("enableSelectByExample",String.valueOf(enableSelectByExample));
-//        tableConfig.put("selectByExampleQueryId",String.valueOf(selectByExampleQueryId));
 
         List<String> tables = ( List<String>) objectMap.get("tables");
 
@@ -116,11 +102,15 @@ public class XMLUtil {
 
             tf.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, document.getDoctype().getPublicId());
             tf.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, document.getDoctype().getSystemId());
-
-            tf.transform(new DOMSource(document),new StreamResult(new File(xmlPath)));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Result outputTarget = new StreamResult(outputStream);
+            tf.transform(new DOMSource(document),outputTarget);
+            InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
+            return is;
         } catch (TransformerException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 

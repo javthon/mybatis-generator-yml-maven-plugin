@@ -1,14 +1,13 @@
 package com.javthon.mybatisgeneratorbestpractice;
 
 import com.javthon.mybatisgeneratorbestpractice.utils.XMLUtil;
-import java.io.File;
-import java.io.FileInputStream;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +18,11 @@ public class Generator {
         System.out.println("Generating config file");
         ConfigurationParser cp = new ConfigurationParser(warnings);
         XMLUtil creatXml = new XMLUtil();
-        String ss="F:\\项目\\mybatis-generator-bestpractice\\src\\main\\resources\\config\\test.xml";
-        creatXml.createXML("F:\\项目\\mybatis-generator-bestpractice\\src\\main\\resources\\application.yml",ss);
+        String ymlPath="D:\\projects\\mybatis-generator-bestpractice\\src\\main\\resources\\generatorConfig.yml";
+        InputStream xml = creatXml.createXML(ymlPath);
         System.out.println("Config file generated");
-        Thread.sleep(1000);
         System.out.println("Parsing config file, please wait");
-        Configuration config = cp.parseConfiguration(new FileInputStream(new File("F:\\项目\\mybatis-generator-bestpractice\\src\\main\\resources\\config\\test.xml")));
-        // 解决IDEA下运行，多个模块路径冲突问题
-//        cpath = cpath.substring(0, cpath.indexOf("target")).replace("file:/", "");
+        Configuration config = cp.parseConfiguration(xml);
         Context context = config.getContexts().get(0);
         context.getJavaModelGeneratorConfiguration(). setTargetProject("src/main/java");
         context.getSqlMapGeneratorConfiguration().setTargetProject("src/main/java");
