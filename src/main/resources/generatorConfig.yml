@@ -1,8 +1,8 @@
 mybatisGenerator:
     datasource:
-        url: jdbc:mysql://35.234.41.130:3306/JS_mysql_db
+        url: jdbc:mysql://localhost:3306/test
         username: root
-        password: Woshixxf666
+        password: root
 
     targetPackage:
         model: com.example.domain
@@ -15,14 +15,15 @@ mybatisGenerator:
     disableExample: true
 
     plugins:
-        comment: false
-        lombok: false
-        swagger: true
+        comment: true
+        lombok: true
+        swagger: false
         mapperAnnotation: false
-        serializable: true
+        serializable: false
 
     tables:
         - role
+        - user
 
 
 

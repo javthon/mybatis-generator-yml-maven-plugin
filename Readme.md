@@ -38,9 +38,9 @@ Step 3: 运行Generator.java生成代码
 ```
 mybatisGenerator:
     datasource:
-        url: jdbc:mysql://35.234.41.130:3306/JS_mysql_db
+        url: jdbc:mysql://localhost:3306/test
         username: root
-        password: Woshixxf666
+        password: root
 
     targetPackage:
         model: com.example.domain
@@ -56,19 +56,19 @@ mybatisGenerator:
         comment: true
         lombok: true
         swagger: false
-        mapperAnnotation: true
-        serializable: true
+        mapperAnnotation: false
+        serializable: false
 
     tables:
-        - user
         - role
+        - user
 ```
 ### 配置概览
 属性 | 类型 | 默认值 | 是否必须 | 描述
 --- | --- | --- | --- |--- 
 datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置"，当前只支持mysql
 targetPackage| Map| | 是| 生成代码的包路径，见下方targetPackage配置
-targetRuntime| String| MyBatis3Simple|是|mybatis generator生产代码的格式,见下方targetRuntime可选项
+targetRuntime| String| MyBatis3|是|mybatis generator生产代码的格式,见下方targetRuntime可选项
 mapperSuffixName|String|mapper|否|mapper类或xml文件的后缀名,如果将此属性设置为dao，并且表名是user，它将生成UserDao.java和UserDao.xml，如果targetRuntime设置为MyBatis3DynamicSql，则此属性将不起作用
 java8|Boolean|false|否|如果为true，则生成模型日期字段将使用Java8的LocalDateTime或LocalDate，否则使用Date
 disableExample|Boolean|true|否|此属性仅在targetRuntime为MyBatis3生效，为true时mapper不生成"by example"代码
@@ -270,7 +270,7 @@ import java.util.Date;
 
 @ApiModel(value="com.example.domain.Role")
 public class Role {
-    @ApiModelProperty(value="")
+    @ApiModelProperty(value="id")
     private Long id;
 
     @ApiModelProperty(value="角色名称")
@@ -341,6 +341,8 @@ model实现了Serializable接口
 
 
 ## Contributing
+如不支持您用的数据库，或不符合您的数据库版本，请new issues或者加入此项目的开发中来<br>
+如您发现本项目的错误或有好的意见也欢迎加入<br>
 Your contributions are always welcome!
 
 
