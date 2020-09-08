@@ -1,6 +1,7 @@
 package com.javthon.mybatisgeneratorbestpractice.utils;
 
 import com.google.common.base.CaseFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -13,105 +14,96 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class XMLUtil {
+@Slf4j
+public class ConfigurationParser {
 
 
     /**
-     * 生成xml
+     * Generate a inputStream of a xml file
+     * @param ymlPath
+     * @return a inputStream of a xml file
+     * @throws ParserConfigurationException
      */
     public InputStream createXML(String ymlPath) throws ParserConfigurationException {
         // Create document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.newDocument();
+        // set DOCTYPE
+        setDocType(document);
+        Element element = document.createElement("generatorConfiguration");
+        // context node
+        Element context = document.createElement("context");
+        context.setAttribute("id","simple");
+        // Reads the yml file
+        Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource(ymlPath);
+        // Starting parse the yml file
+        Map<String, Object> objectMap = (Map<String, Object>) objectMapFromSource.get("mybatisGenerator");
+        String targetRuntime = (String) objectMap.get("targetRuntime");
+        context.setAttribute("targetRuntime",targetRuntime);
+
+        // parse plugin configuration
+        parsePlugins(objectMap,document,context);
+
+        // disable default comment configuration
+        disableDefaultComment(document,context);
+
+        // parse datasource configuration
+        parseConnectionConfig(objectMap,document,context);
+
+        // set model date fields type
+        setJavaTypeResolver(objectMap,document,context);
+
+        // parse target package configuration
+        parseTargetPackage(objectMap,document,context);
+
+        // parse tables configuration
+        parseTables(objectMap,document,context);
+
+        // add elements to the document
+        element.appendChild(context);
+        document.appendChild(element);
+        return getXMLInputStream(document);
+
+    }
+
+    private void setDocType(Document document){
         //Create doc type
         DOMImplementation domImpl = document.getImplementation();
         DocumentType doctype = domImpl.createDocumentType("generatorConfiguration", "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN", "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd");
         document.appendChild(doctype);
-        Element bookstore = document.createElement("generatorConfiguration");
-        //向bookstore根节点中添加子节点book
-        Element context = document.createElement("context");
-        context.setAttribute("id","simple");
+    }
 
-
-        Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource(ymlPath);
-        Map<String, Object> objectMap = (Map<String, Object>) objectMapFromSource.get("mybatisGenerator");
-
-
-        Map<String, Object> plugins = (Map<String, Object>) objectMap.get("plugins");
-        Boolean comment = (Boolean) plugins.get("comment");
-        Boolean lombok = (Boolean) plugins.get("lombok");
-        Boolean swagger = (Boolean) plugins.get("swagger");
-
-        String targetRuntime = (String) objectMap.get("targetRuntime");
-        context.setAttribute("targetRuntime",targetRuntime);
-
-
-        String mapperSuffixName = (String) objectMap.get("mapperSuffixName");
-
-        Boolean java8 = (Boolean) objectMap.get("java8");
-
-        List<String> tables = ( List<String>) objectMap.get("tables");
-
-        //  swagger
-        if(swagger){
-            appendSwaggerPlugin(document,context);
-        }
-        if(lombok){
-            appendLombokPlugin(document,context);
-        }
-        if(comment){
-            appendCommentPlugin(document,context);
-        }
-
-        disableDefaultComment(document,context);
-        ///////mysql////////////
-        Map<String, Object> datasource = (Map<String, Object>)objectMap.get("datasource");
-        String url = (String) datasource.get("url");
-        String username = (String) datasource.get("username");
-        String password = String.valueOf(datasource.get("password"));
-        appendConnectionConfig(document,context,url,username,password);
-        ///////mysql////////////
-        setJavaTypeResolver(document,context,java8);
-
-        ///////targetPackage/////////
-        Map<String, Object> targetPackage = (Map<String, Object>) objectMap.get("targetPackage");
-        String model = (String) targetPackage.get("model");
-        String javaMapper = (String) targetPackage.get("javaMapper");
-        String xmlMapper = (String) targetPackage.get("xmlMapper");
-        appendTargetPackage(document,context,model,javaMapper,xmlMapper);
-        ///////targetPackage/////////
-
-        appendTables(document,context,tables,mapperSuffixName);
-        bookstore.appendChild(context);
-
-
-
-        //将bookstore节点（已经包含了book）添加到dom树中
-        document.appendChild(bookstore);
-        //创建TransformerFactory对象
+    private InputStream getXMLInputStream(Document document){
         TransformerFactory tff = TransformerFactory.newInstance();
         try {
-            //创建Transformer对象
             Transformer tf = tff.newTransformer();
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
-
             tf.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, document.getDoctype().getPublicId());
             tf.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, document.getDoctype().getSystemId());
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Result outputTarget = new StreamResult(outputStream);
             tf.transform(new DOMSource(document),outputTarget);
-            InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
-            return is;
+            return new ByteArrayInputStream(outputStream.toByteArray());
         } catch (TransformerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(),e);
         }
         return null;
+    }
+
+    private void appendMapperAnnotationPlugin(Document document, Element context) {
+        Element pluginSwagger = document.createElement("plugin");
+        pluginSwagger.setAttribute("type","org.mybatis.generator.plugins.MapperAnnotationPlugin");
+        context.appendChild(pluginSwagger);
+    }
+
+    private void appendSerializablePlugin(Document document, Element context) {
+        Element pluginSwagger = document.createElement("plugin");
+        pluginSwagger.setAttribute("type","org.mybatis.generator.plugins.SerializablePlugin");
+        context.appendChild(pluginSwagger);
     }
 
 
@@ -173,13 +165,42 @@ public class XMLUtil {
     }
 
 
-    public void appendConnectionConfig(Document document, Element context, String url, String user, String password){
+    public void parseConnectionConfig(Map<String, Object> objectMap, Document document, Element context){
+        Map<String, Object> datasource = (Map<String, Object>)objectMap.get("datasource");
+        String url = (String) datasource.get("url");
+        String username = (String) datasource.get("username");
+        String password = String.valueOf(datasource.get("password"));
         Element pluginSwagger = document.createElement("jdbcConnection");
         pluginSwagger.setAttribute("driverClass","com.mysql.cj.jdbc.Driver");
         pluginSwagger.setAttribute("connectionURL",url);
-        pluginSwagger.setAttribute("userId",user);
+        pluginSwagger.setAttribute("userId",username);
         pluginSwagger.setAttribute("password",password);
         context.appendChild(pluginSwagger);
+    }
+
+    public void parsePlugins(Map<String, Object> objectMap, Document document, Element context){
+        Map<String, Object> plugins = (Map<String, Object>) objectMap.get("plugins");
+        Boolean comment = (Boolean) plugins.get("comment");
+        Boolean lombok = (Boolean) plugins.get("lombok");
+        Boolean swagger = (Boolean) plugins.get("swagger");
+        Boolean serializable = (Boolean) plugins.get("serializable");
+        Boolean mapperAnnotation = (Boolean) plugins.get("mapperAnnotation");
+        //  swagger
+        if(swagger){
+            appendSwaggerPlugin(document,context);
+        }
+        if(lombok){
+            appendLombokPlugin(document,context);
+        }
+        if(comment){
+            appendCommentPlugin(document,context);
+        }
+        if(serializable){
+            appendSerializablePlugin(document,context);
+        }
+        if(mapperAnnotation){
+            appendMapperAnnotationPlugin(document,context);
+        }
     }
 
     public void disableDefaultComment(Document document, Element context){
@@ -192,10 +213,15 @@ public class XMLUtil {
         temp2.setAttribute("value","true");
         temp.appendChild(temp1);
         temp.appendChild(temp2);
-
         context.appendChild(temp);
     }
-    public void setJavaTypeResolver(Document document, Element context,Boolean java8){
+
+
+    public void setJavaTypeResolver(Map<String, Object> objectMap, Document document, Element context){
+        Boolean java8 = (Boolean) objectMap.get("java8");
+        if(java8==null){
+            java8=false;
+        }
         Element temp3 = document.createElement("javaTypeResolver");
         Element temp4 = document.createElement("property");
         temp4.setAttribute("name","forceBigDecimals");
@@ -208,7 +234,12 @@ public class XMLUtil {
         context.appendChild(temp3);
     }
 
-    public void appendTargetPackage(Document document, Element context,String modelPackage, String javaMapperPackage, String xmlMapperPackage){
+
+    public void parseTargetPackage(Map<String, Object> objectMap, Document document, Element context){
+        Map<String, Object> targetPackage = (Map<String, Object>) objectMap.get("targetPackage");
+        String modelPackage = (String) targetPackage.get("model");
+        String javaMapperPackage = (String) targetPackage.get("javaMapper");
+        String xmlMapperPackage = (String) targetPackage.get("xmlMapper");
         Element pluginSwagger = document.createElement("javaModelGenerator");
         pluginSwagger.setAttribute("targetPackage",modelPackage);
         pluginSwagger.setAttribute("targetProject","src/main/java");
@@ -228,24 +259,17 @@ public class XMLUtil {
     }
 
 
-    public void appendTables(Document document, Element context, List<String> tableNames, String mapperSuffixName){
+    public void parseTables(Map<String, Object> objectMap, Document document, Element context){
+        String mapperSuffixName = (String) objectMap.get("mapperSuffixName");
+        List<String> tableNames = ( List<String>) objectMap.get("tables");
         for(String tableName : tableNames){
             Element pluginSwagger = document.createElement("table");
             pluginSwagger.setAttribute("tableName",tableName);
-//            Set<String> keys = map.keySet();
-//            for(String key : keys){
-//                pluginSwagger.setAttribute(key,map.get(key));
-//            }
             String mapperName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName)+CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapperSuffixName);
             pluginSwagger.setAttribute("mapperName",mapperName);
             context.appendChild(pluginSwagger);
         }
 
-    }
-
-    public static void main(String[] args) throws ParserConfigurationException {
-//        XMLUtil creatXml = new XMLUtil();
-//        creatXml.createXML();
     }
 
 }

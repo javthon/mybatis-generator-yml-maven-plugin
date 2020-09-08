@@ -1,10 +1,9 @@
 package com.javthon.mybatisgeneratorbestpractice;
 
-import com.javthon.mybatisgeneratorbestpractice.utils.XMLUtil;
+import com.javthon.mybatisgeneratorbestpractice.utils.ConfigurationParser;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
 import java.io.InputStream;
@@ -16,9 +15,11 @@ public class Generator {
         List<String> warnings = new ArrayList<>();
         boolean overwrite = true;
         System.out.println("Generating config file");
-        ConfigurationParser cp = new ConfigurationParser(warnings);
-        XMLUtil creatXml = new XMLUtil();
-        String ymlPath="D:\\projects\\mybatis-generator-bestpractice\\src\\main\\resources\\generatorConfig.yml";
+        org.mybatis.generator.config.xml.ConfigurationParser cp = new org.mybatis.generator.config.xml.ConfigurationParser(warnings);
+        ConfigurationParser creatXml = new ConfigurationParser();
+//        String ymlPath="F:\\项目\\mybatis-generator-bestpractice\\target\\classes\\generatorConfig.yml";
+        String ymlPath = Generator.class.getClassLoader().getResource("generatorConfig.yml").getPath();//获取文件路径
+        ymlPath = java.net.URLDecoder.decode(ymlPath,"utf-8");
         InputStream xml = creatXml.createXML(ymlPath);
         System.out.println("Config file generated");
         System.out.println("Parsing config file, please wait");

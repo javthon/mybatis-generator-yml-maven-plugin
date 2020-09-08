@@ -10,6 +10,8 @@ import java.util.List;
 
 
 /**
+ * Original author is https://github.com/MisterChangRay/mybatis-generator-plugins
+ * Adapted by javthon
  * @author Created by rui.zhang on 2018/4/9.
  * @version ver1.0
  * email misterchangray@hotmail.com

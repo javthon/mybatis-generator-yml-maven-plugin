@@ -12,19 +12,19 @@ mybatisGenerator:
     #MyBatis3DynamicSql, MyBatis3Simple, MyBatis3
     targetRuntime: MyBatis3Simple
     #mapper, dao or other
-    mapperSuffixName: dao
-    java8: true
+    mapperSuffixName: mapper
+    java8: false
 
     plugins:
-        comment: false
-        lombok: false
-        swagger: true
-        #TODO
+        comment: true
+        lombok: true
+        swagger: false
         mapperAnnotation: true
         serializable: true
 
     tables:
         - fence
+        - warn_info
 
 
 
