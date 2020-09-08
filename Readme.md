@@ -5,99 +5,82 @@
 ![language](https://img.shields.io/badge/language-java-yellow.svg)
 
 
-## What is it?
-This project is a yml configuration file version instead of original xml configuration file version of mybatis generator. Using yml configuration to simplify the configuration and add most useful plugins.
-This project is currently only support MySQL database, if you are using other databases, open an enhancement issue or become a contributor.
+## 这是甚?
+mybatis generator默认使用xml的配置方式来生成代码，配置有些繁琐，本工程主要目的是使用yml文件格式来简化配置，并支持注释生成、lombok、swagger等实用插件的方便配置。
 
 
-
-## Contents
-- [Requirements](#requirements)
-- [Get started](#get-started)
-- [Configuration](#configuration)
-- [Tips](#tips)
-- [TODO](#todo)
+## 内容
+- [环境要求](#环境要求)
+- [如何使用](#如何使用)
+- [配置](#配置)
+- [待完善](#待完善)
 - [Contributing](#contributing)
 
 
-## Requirements
-- Jinspector requires JDK1.8+ installed  
-- You need to know about yaml language, if you don't know this language, it doesn't matter, cause it's quite simple. You don't need to know all about this language, just follow the configuration sample and you will know how to configure it easily   
+## 环境要求
+- 安装好Java8和一个IDE 
+- 如要使用lombok，需要在IDE中安装lombok插件   
 
 
-## Get Started
-Step 1: download the source code 
-Step 2: modify the yml config file according to the [configuration](#configuration) rules below  
-Step 3: run Generator.java 
+## 如何使用
+Step 1: 下载源码
+Step 2: 按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 规则修改配置  
+Step 3: 运行Generator.java 
 
 
 
-## Configuration
+## 配置
 
-Overview configuration
-Attribute | Type | Default Value | Required | Description
+### 配置概览
+属性 | 类型 | 默认值 | 是否必须 | 描述
 --- | --- | --- | --- |--- 
-datasource | Map |  | true | mysql database connection info, for more details, see "Configuration of datasource" below
-targetPackage| Map| | true| package names of mybatis model and sql files, for more details, see "Configuration of targetPackage" below
-targetRuntime| String| MyBatis3Simple|true|mybatis generator runtime, options see "Options of targetRuntime" below
-mapperSuffixName|String|mapper|false|mapper xml or java file suffix,for example, if set this attribute dao,and  the table name is user, it will generate UserDao.java and UserDao.xml, this attrubute won't work if targetRuntime set to MyBatis3DynamicSql
-java8|Boolean|false|false|if true, the model date fields will use LocalDateTime or LocalDate, else use Date
-plugins|Map||false|mybatis plugins to enable, suports comment, lombok, swagger, mapperAnnotation, serializable and so on, for more details, see "Configuration of plugins" below
-tables|List||true|List of tables you want to generate mybatis files
+datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置"，当前只支持mysql
+targetPackage| Map| | 是| 生成代码的包路径，见下方targetPackage配置
+targetRuntime| String| MyBatis3Simple|是|mybatis generator生产代码的格式,见下方targetRuntime可选项
+mapperSuffixName|String|mapper|false|mapper类或xml文件的后缀名,如果将此属性设置为dao，并且表名是user，它将生成UserDao.java和UserDao.xml，如果targetRuntime设置为MyBatis3DynamicSql，则此属性将不起作用
+java8|Boolean|false|否|如果为true，则生成模型日期字段将使用Java8的LocalDateTime或LocalDate，否则使用Date
+plugins|Map||否| 配置是否开启注释, lombok, swagger, mapperAnnotation, serializable等插件, 详情见下方插件配置
+tables|List||是|多个表格名，配置方式见generatorConfig.yml样例
 
-Configuration of datasource
-Attribute | Type | Required | Description
+#### 数据源配置
+属性 | 类型 | 是否必须 | 描述
 --- | --- | --- |--- 
-url|String|true|the url of your database, for example:jdbc:mysql://localhost:3306/test currently only support mysql
-username|String|true|database user
-password|String|true|database password
+url|String|true|数据库连接, 如：jdbc:mysql://localhost:3306/test 当前只支持mysql
+username|String|true|数据库用户名
+password|String|true|数据库密码
 
 
-Configuration of targetPackage
-Attribute | Type | Required | Description   
+#### targetPackage配置
+属性 | 类型 | 是否必须 | 描述   
 --- | --- | --- |--- 
-model|String|true|model package name, for example:com.example.domain
-javaMapper|String|true|java mapper package name, for example:com.example.mapper
-xmlMapper|String|true|xml mapper package name, for example:com.example.mapper, it is only avalible when targetRuntime is MyBatis3Simple or MyBatis3, and the source code will be generated to resources folder
+model|String|true|生成模型的包路径, 如：com.example.domain
+javaMapper|String|true|生成的java mapper的包路径, 如:com.example.mapper
+xmlMapper|String|true|生成的xml mapper的包路径, 如：com.example.mapper, 该属性仅在targetRuntime为MyBatis3Simple或MyBatis3时可用，xml mapper代码将生成至resources文件夹下
 
 
-Configuration of plugins
-Attribute | Type | Required | Description   
+#### 插件配置
+属性 | 类型 | 是否必须 | 描述   
 --- | --- | --- |--- 
-comment|Boolean|false|if true, comment will be generated over all fields
-lombok|Boolean|false|add lombok support
-swagger|Boolean|false|
-mapperAnnotation|Boolean|false|
-serializable|Boolean|false|
+comment|Boolean|false|是否开启model的注释
+lombok|Boolean|false|是否使用lombok，不生成setter和getter
+swagger|Boolean|false|是否使用swagger2注解
+mapperAnnotation|Boolean|false|是否在mapper类上加@Mapper注解
+serializable|Boolean|false|是否实现Serializable接口
 
-Options of targetRuntime
-Value|Description
+#### targetRuntime的可选值
+值|描述
 --- | ---
-MyBatis3DynamicSql|The generated code is dependent on the MyBatis Dynamic SQL Library. The generated code allows tremendous flexibility in query construction. Does not generate XML
-MyBatis3Simple|Generates MyBatis3 compatible XML and SQL or MyBatis3 compatible annotated interfaces with no XML. No "by example" or "selective" methods are generated
-MyBatis3|Generates MyBatis3 compatible XML and SQL or MyBatis3 compatible annotated interfaces with no XML. With "by example" or "selective" methods are generated
+MyBatis3DynamicSql|生成的代码依赖于MyBatis动态SQL库。 生成的代码为查询构造提供了极大的灵活性。 不生成XML。mybatis generator 1.4.0官方推荐此方式
+MyBatis3Simple|生成mapper java接口和xml配置文件。没有"by example" 或者"selective"方法，代码较简洁
+MyBatis3|生成mapper java接口和xml配置文件。有"by example" 或者 "selective" 方法，代码比较啰嗦
 
 
 
-
-
-## Tips
-Here are some inspectCommand tips:
-```
-netstat -ano        # look for ports
-tasklist         # look processes on windows
-ps aux | grep xxx.jar         # find process on linux
-......
-Waiting for contibuters' advice
-```
-
-## TODO
-- web interface
-- auto recover function
-- use netty instead of tomcat for better performance
-- complete the code comments and documents
-- built-in inspect commands and auto find services
-- set up docker version
+## 待完善
+- 支持更多数据库
+- 支持更多实用的插件
+- 探索MyBatis3DynamicSql和MyBatis3Simple的优劣
+- 做成maven插件
 
 
 ## Contributing
