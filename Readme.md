@@ -23,8 +23,8 @@ mybatis generator默认使用xml的配置方式来生成代码，配置有些繁
 
 
 ## 如何使用
-Step 1: 下载源码
-Step 2: 按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 规则修改配置  
+Step 1: 下载源码<br>
+Step 2: 按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 规则修改配置 <br> 
 Step 3: 运行Generator.java 
 
 
@@ -43,9 +43,7 @@ mybatisGenerator:
         javaMapper: com.example.dao
         xmlMapper: com.example.dao
 
-    #MyBatis3DynamicSql, MyBatis3, MyBatis3Simple
     targetRuntime: MyBatis3
-    #mapper, dao or other
     mapperSuffixName: mapper
     java8: false
     disableExample: true
