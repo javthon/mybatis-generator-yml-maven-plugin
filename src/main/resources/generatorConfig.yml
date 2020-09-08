@@ -23,8 +23,7 @@ mybatisGenerator:
         serializable: true
 
     tables:
-        - fence
-        - warn_info
+        - role
 
 
 
