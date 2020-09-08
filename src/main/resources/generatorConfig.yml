@@ -9,11 +9,12 @@ mybatisGenerator:
         javaMapper: com.example.dao
         xmlMapper: com.example.dao
 
-    #MyBatis3DynamicSql, MyBatis3Simple, MyBatis3
-    targetRuntime: MyBatis3Simple
+    #MyBatis3DynamicSql, MyBatis3, MyBatis3Simple
+    targetRuntime: MyBatis3
     #mapper, dao or other
     mapperSuffixName: mapper
     java8: false
+    disableExample: true
 
     plugins:
         comment: true
@@ -23,6 +24,7 @@ mybatisGenerator:
         serializable: true
 
     tables:
+        - user
         - role
 
 

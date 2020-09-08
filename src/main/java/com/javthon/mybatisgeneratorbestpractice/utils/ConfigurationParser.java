@@ -267,6 +267,14 @@ public class ConfigurationParser {
             pluginSwagger.setAttribute("tableName",tableName);
             String mapperName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName)+CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapperSuffixName);
             pluginSwagger.setAttribute("mapperName",mapperName);
+            Boolean disableExample = (Boolean) objectMap.get("disableExample");
+            if(disableExample){
+                pluginSwagger.setAttribute("enableCountByExample","false");
+                pluginSwagger.setAttribute("enableUpdateByExample","false");
+                pluginSwagger.setAttribute("enableDeleteByExample","false");
+                pluginSwagger.setAttribute("enableSelectByExample","false");
+                pluginSwagger.setAttribute("selectByExampleQueryId","false");
+            }
             context.appendChild(pluginSwagger);
         }
 
