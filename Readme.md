@@ -5,14 +5,18 @@
 ![language](https://img.shields.io/badge/language-java-yellow.svg)
 
 
-## 这是甚?
-mybatis generator默认使用xml的配置方式来生成代码，配置有些繁琐，本工程主要目的是使用yml文件格式来简化配置，并支持注释生成、lombok、swagger等实用插件的方便配置。
+## 造轮子目的
+- 使用yml配置来简化MyBatis Generator默认使用的xml配置
+- 支持注释生成、lombok、swagger等常用插件的方便配置
+- 介绍使用某种配置或插件的好处
+- 试图寻找针对不同情景的最优配置
 
 
 ## 内容
 - [环境要求](#环境要求)
 - [如何使用](#如何使用)
 - [配置](#配置)
+- [插件介绍](#插件介绍)
 - [待完善](#待完善)
 - [Contributing](#contributing)
 
@@ -24,13 +28,13 @@ mybatis generator默认使用xml的配置方式来生成代码，配置有些繁
 
 ## 如何使用
 Step 1: 下载源码<br>
-Step 2: 按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 规则修改配置 <br> 
-Step 3: 运行Generator.java 
+Step 2: 按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 说明修改配置 <br> 
+Step 3: 运行Generator.java生成代码 
 
 
 
 ## 配置
-### 全配置样例
+### 完整配置样例
 ```
 mybatisGenerator:
     datasource:
@@ -103,7 +107,231 @@ MyBatis3DynamicSql|生成的代码依赖于MyBatis动态SQL库。 生成的代�
 MyBatis3Simple|生成mapper java接口和xml配置文件。没有"by example" 或者"selective"方法，代码较简洁
 MyBatis3|生成mapper java接口和xml配置文件。有"by example" 或者 "selective" 方法，代码比较啰嗦
 
+## 插件介绍
+#### 未使用任何插件前代码
+```
+import java.util.Date;
 
+public class Role {
+    private Long id;
+
+    private String name;
+
+    private String remark;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+}
+```
+#### 注释插件
+使用后在每个字段上方生成数据库中对应字段的注释：
+```
+import java.util.Date;
+
+public class Role {
+    /**
+     * id
+     */
+    private Long id;
+
+    /**
+     * 角色名称
+     */
+    private String name;
+
+    /**
+     * 角色备注
+     */
+    private String remark;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+}
+```
+#### lombok插件
+使用后没有setter和getter，大大简化了代码：
+```
+import java.util.Date;
+import lombok.Data;
+
+/**
+ * role
+ * @author Tensorflow
+ * @date 2020-09-08 22:24:45
+ */
+@Data
+public class Role {
+    private Long id;
+
+    private String name;
+
+    private String remark;
+
+    private Date createTime;
+
+    private Date updateTime;
+}
+```
+
+#### swagger插件
+项目中使用swagger2作为接口测试框架的可以使用此插件：
+```
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import java.util.Date;
+
+@ApiModel(value="com.example.domain.Role")
+public class Role {
+    @ApiModelProperty(value="")
+    private Long id;
+
+    @ApiModelProperty(value="角色名称")
+    private String name;
+
+    @ApiModelProperty(value="角色备注")
+    private String remark;
+
+    @ApiModelProperty(value="创建时间")
+    private Date createTime;
+
+    @ApiModelProperty(value="更新时间")
+    private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+}
+```
+
+#### mapperAnnotation插件
+在java mapper接口上添加了@Mapper注解
+
+#### serializable插件
+model实现了Serializable接口
 
 ## 待完善
 - 支持更多数据库
