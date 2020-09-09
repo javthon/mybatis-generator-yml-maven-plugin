@@ -26,10 +26,6 @@ public class Generator {
         log.info("Parsing config file, please wait");
         Configuration config = cp.parseConfiguration(xml);
         Context context = config.getContexts().get(0);
-        // set project path
-        context.getJavaModelGeneratorConfiguration(). setTargetProject("src/main/java");
-        context.getSqlMapGeneratorConfiguration().setTargetProject("src/main/java");
-        context.getJavaClientGeneratorConfiguration().setTargetProject("src/main/java");
         // set package name
         context.getJavaModelGeneratorConfiguration(). setTargetProject(context.getJavaModelGeneratorConfiguration().getTargetProject());
         context.getSqlMapGeneratorConfiguration().setTargetProject(context.getSqlMapGeneratorConfiguration().getTargetProject());

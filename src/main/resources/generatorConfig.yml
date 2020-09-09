@@ -6,8 +6,8 @@ mybatisGenerator:
 
     targetPackage:
         model: com.example.domain
-        javaMapper: com.example.dao
-        xmlMapper: com.example.dao
+        mapper: com.example.dao
+        javaXmlFilesSamePackage: true
 
     targetRuntime: MyBatis3
     mapperSuffixName: mapper
@@ -22,8 +22,8 @@ mybatisGenerator:
         serializable: false
 
     tables:
-        - role
         - user
+        - role
 
 
 

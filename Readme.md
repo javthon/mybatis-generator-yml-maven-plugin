@@ -44,11 +44,11 @@ mybatisGenerator:
 
     targetPackage:
         model: com.example.domain
-        javaMapper: com.example.dao
-        xmlMapper: com.example.dao
+        mapper: com.example.dao
+        javaXmlFilesSamePackage: true
 
     targetRuntime: MyBatis3
-    mapperSuffixName: mapper
+    mapperSuffixName: dao
     java8: false
     disableExample: true
 
@@ -60,8 +60,8 @@ mybatisGenerator:
         serializable: false
 
     tables:
-        - role
         - user
+        - role
 ```
 ### 配置概览
 属性 | 类型 | 默认值 | 是否必须 | 描述
@@ -87,8 +87,8 @@ password|String|是|数据库密码
 属性 | 类型 | 是否必须 | 描述   
 --- | --- | --- |--- 
 model|String|否|生成模型的包路径, 如：com.example.domain
-javaMapper|String|否|生成的java mapper的包路径, 如:com.example.mapper
-xmlMapper|String|否|生成的xml mapper的包路径, 如：com.example.mapper, 该属性仅在targetRuntime为MyBatis3Simple或MyBatis3时可用，xml mapper代码将生成至resources文件夹下
+mapper|String|否|生成的java接口和xml mapper的包路径, 如:com.example.mapper
+javaXmlFilesSamePackage|Boolean|否|如果是true，java接口和xml mapper会生成在一个包下，如果是false，xml mapper代码将生成至resources目录下，该属性仅在targetRuntime为MyBatis3Simple或MyBatis3时可用
 
 
 #### 插件配置

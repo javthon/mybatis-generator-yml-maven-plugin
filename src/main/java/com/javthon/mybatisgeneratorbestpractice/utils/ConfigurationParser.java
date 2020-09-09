@@ -251,24 +251,27 @@ public class ConfigurationParser {
     public void parseTargetPackage(Map<String, Object> objectMap, Document document, Element context){
         Map<String, Object> targetPackage = (Map<String, Object>) objectMap.get("targetPackage");
         String modelPackage = (String) targetPackage.get("model");
-        String javaMapperPackage = (String) targetPackage.get("javaMapper");
-        String xmlMapperPackage = (String) targetPackage.get("xmlMapper");
-        Element pluginSwagger = document.createElement("javaModelGenerator");
-        pluginSwagger.setAttribute("targetPackage",modelPackage);
-        pluginSwagger.setAttribute("targetProject","src/main/java");
-        context.appendChild(pluginSwagger);
+        String mapperPackage = (String) targetPackage.get("mapper");
+        Boolean javaXmlFilesSamePackage = (Boolean) targetPackage.get("javaXmlFilesSamePackage");
+        Element javaModel = document.createElement("javaModelGenerator");
+        javaModel.setAttribute("targetPackage",modelPackage);
+        javaModel.setAttribute("targetProject","src/main/java");
+        context.appendChild(javaModel);
 
-        Element pluginSwagger1 = document.createElement("sqlMapGenerator");
-        pluginSwagger1.setAttribute("targetPackage",javaMapperPackage);
-        pluginSwagger1.setAttribute("targetProject","src/main/resources");
-        context.appendChild(pluginSwagger1);
+        Element javaMap = document.createElement("javaClientGenerator");
+        javaMap.setAttribute("type","XMLMAPPER");
+        javaMap.setAttribute("targetPackage",mapperPackage);
+        javaMap.setAttribute("targetProject","src/main/java");
 
-        Element pluginSwagger2 = document.createElement("javaClientGenerator");
-        pluginSwagger2.setAttribute("type","XMLMAPPER");
-        pluginSwagger2.setAttribute("targetPackage",xmlMapperPackage);
-        pluginSwagger2.setAttribute("targetProject","src/main/java");
-        context.appendChild(pluginSwagger2);
-
+        Element sqlMap = document.createElement("sqlMapGenerator");
+        sqlMap.setAttribute("targetPackage",mapperPackage);
+        if(javaXmlFilesSamePackage){
+            sqlMap.setAttribute("targetProject","src/main/java");
+        }else{
+            sqlMap.setAttribute("targetProject","src/main/resources");
+        }
+        context.appendChild(sqlMap);
+        context.appendChild(javaMap);
     }
 
 
