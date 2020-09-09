@@ -190,6 +190,8 @@ public class ConfigurationParser {
         Boolean swagger = (Boolean) plugins.get("swagger");
         Boolean serializable = (Boolean) plugins.get("serializable");
         Boolean mapperAnnotation = (Boolean) plugins.get("mapperAnnotation");
+        // override xml mapper
+        appendOverrideXmlPlugin(document, context);
         //  swagger
         if(swagger){
             appendSwaggerPlugin(document,context);
@@ -206,6 +208,12 @@ public class ConfigurationParser {
         if(mapperAnnotation){
             appendMapperAnnotationPlugin(document,context);
         }
+    }
+
+    private void appendOverrideXmlPlugin(Document document, Element context) {
+        Element overridePlugin = document.createElement("plugin");
+        overridePlugin.setAttribute("type","org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin");
+        context.appendChild(overridePlugin);
     }
 
     public void disableDefaultComment(Document document, Element context){
