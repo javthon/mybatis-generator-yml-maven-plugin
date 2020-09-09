@@ -170,12 +170,17 @@ public class ConfigurationParser {
         String url = (String) datasource.get("url");
         String username = (String) datasource.get("username");
         String password = String.valueOf(datasource.get("password"));
-        Element pluginSwagger = document.createElement("jdbcConnection");
-        pluginSwagger.setAttribute("driverClass","com.mysql.cj.jdbc.Driver");
-        pluginSwagger.setAttribute("connectionURL",url);
-        pluginSwagger.setAttribute("userId",username);
-        pluginSwagger.setAttribute("password",password);
-        context.appendChild(pluginSwagger);
+        Element connection = document.createElement("jdbcConnection");
+        connection.setAttribute("driverClass","com.mysql.cj.jdbc.Driver");
+        connection.setAttribute("connectionURL",url);
+        connection.setAttribute("userId",username);
+        connection.setAttribute("password",password);
+
+        Element temp = document.createElement("property");
+        temp.setAttribute("name","nullCatalogMeansCurrent");
+        temp.setAttribute("value","true");
+        connection.appendChild(temp);
+        context.appendChild(connection);
     }
 
     public void parsePlugins(Map<String, Object> objectMap, Document document, Element context){
