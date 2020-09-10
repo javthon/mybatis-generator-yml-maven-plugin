@@ -13,11 +13,11 @@ English | [简体中文](https://github.com/javthon/mybatis-generator-bestpracti
 
 
 ## Content
-- [Environmental requirements](#Environmental requirements)
-- [How to use](#How to use)
+- [Environmental requirements](#Environmental-requirements)
+- [How to use](#How-to-use)
 - [Configuration](#Configuration)
-- [Plugin Introduction](#Plugin Introduction)
-- [TODO] (#TODO)
+- [Plugin Introduction](#Plugin-Introduction)
+- [TODO](#TODO)
 - [Contributing](#contributing)
 
 
