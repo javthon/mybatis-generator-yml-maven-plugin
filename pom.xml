@@ -14,7 +14,7 @@
     <version>0.0.1</version>
     <name>mybatis-generator-yml-maven-plugin</name>
     <description>Mybatis Generator yml configuration version</description>
-    <url>https://github.com/javthon/mybatis-generator-bestpractice</url>
+    <url>https://github.com/javthon/mybatis-generator-yml-maven-plugin</url>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -23,14 +23,14 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/javthon/mybatis-generator-bestpractice</url>
-        <connection>https://github.com/javthon/mybatis-generator-bestpractice.git</connection>
+        <url>https://github.com/javthon/mybatis-generator-yml-maven-plugin</url>
+        <connection>https://github.com/javthon/mybatis-generator-yml-maven-plugin.git</connection>
     </scm>
     <developers>
         <developer>
             <email>javthon@gmail.com</email>
             <name>xxf</name>
-            <url>https://github.com/javthon/mybatis-generator-bestpractice</url>
+            <url>https://github.com/javthon/mybatis-generator-yml-maven-plugin</url>
         </developer>
     </developers>
 
