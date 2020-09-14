@@ -1,6 +1,7 @@
 package com.javthon.mybatisgeneratorbestpractice.utils;
 
 import com.google.common.base.CaseFormat;
+import com.javthon.mybatisgeneratorbestpractice.Config;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -23,11 +24,11 @@ public class ConfigurationParser {
 
     /**
      * Generate a inputStream of a xml file
-     * @param ymlPath
+     * @param ymlFile yml config file
      * @return a inputStream of a xml file
-     * @throws ParserConfigurationException
+     * @throws ParserConfigurationException if exception occurred in factory.newDocumentBuilder
      */
-    public InputStream createXML(String ymlPath) throws ParserConfigurationException {
+    public InputStream createXML(File ymlFile) throws ParserConfigurationException {
         // Create document
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -39,7 +40,7 @@ public class ConfigurationParser {
         Element context = document.createElement("context");
         context.setAttribute("id","simple");
         // Reads the yml file
-        Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource(ymlPath);
+        Map<String, Object> objectMapFromSource = YmlUtil.getObjectMapFromSource(ymlFile);
         // Starting parse the yml file
         Map<String, Object> objectMap = (Map<String, Object>) objectMapFromSource.get("mybatisGenerator");
         String targetRuntime = (String) objectMap.get("targetRuntime");
@@ -113,10 +114,8 @@ public class ConfigurationParser {
      * 		<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel" />
      * 		<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty" />
      * </plugin>
-     * @param document
-     * @param context
      */
-    public void appendSwaggerPlugin(Document document, Element context){
+    private void appendSwaggerPlugin(Document document, Element context){
         Element pluginSwagger = document.createElement("plugin");
         pluginSwagger.setAttribute("type","com.javthon.mybatisgeneratorbestpractice.plugins.Swagger2Plugin");
         Element pluginSwaggerProperty1 = document.createElement("property");
@@ -136,10 +135,8 @@ public class ConfigurationParser {
      * <plugin type="com.javthon.mybatisgeneratorbestpractice.plugins.LombokPlugin" >
      * 		<property name="hasLombok" value="true"/>
      * 	</plugin>
-     * @param document
-     * @param context
      */
-    public void appendLombokPlugin(Document document, Element context){
+    private void appendLombokPlugin(Document document, Element context){
         Element pluginSwagger = document.createElement("plugin");
         pluginSwagger.setAttribute("type","com.javthon.mybatisgeneratorbestpractice.plugins.LombokPlugin");
         Element pluginSwaggerProperty1 = document.createElement("property");
@@ -151,10 +148,8 @@ public class ConfigurationParser {
 
     /**
      * Generates lombok annotations on models
-     * @param document
-     * @param context
      */
-    public void appendCommentPlugin(Document document, Element context){
+    private void appendCommentPlugin(Document document, Element context){
         Element pluginSwagger = document.createElement("plugin");
         pluginSwagger.setAttribute("type","com.javthon.mybatisgeneratorbestpractice.plugins.CommentPlugin");
         Element pluginSwaggerProperty1 = document.createElement("property");
@@ -165,13 +160,30 @@ public class ConfigurationParser {
     }
 
 
-    public void parseConnectionConfig(Map<String, Object> objectMap, Document document, Element context){
+    private void parseConnectionConfig(Map<String, Object> objectMap, Document document, Element context){
         Map<String, Object> datasource = (Map<String, Object>)objectMap.get("datasource");
-        String url = (String) datasource.get("url");
+        String type = (String) datasource.get("type");
+        String address = (String) datasource.get("address");
+        String db = (String) datasource.get("db");
         String username = (String) datasource.get("username");
         String password = String.valueOf(datasource.get("password"));
         Element connection = document.createElement("jdbcConnection");
-        connection.setAttribute("driverClass","com.mysql.cj.jdbc.Driver");
+        String driverName = null;
+        String url = null;
+        if("mysql".equals(type)){
+            driverName=Config.DRIVER_MYSQL;
+            url=Config.URL_MYSQL_PREFIX+address+Config.URL_MYSQL_SUFFIX+db;
+        }else if("sqlserver".equals(type)){
+            driverName=Config.DRIVER_SQL_SERVER;
+            url=Config.URL_SQL_SERVER_PREFIX+address+Config.URL_SQL_SERVER_SUFFIX+db;
+        }else if("oracle".equals(type)){
+            driverName=Config.DRIVER_SQL_ORACLE;
+            url=Config.URL_ORACLE_PREFIX+address+Config.URL_ORACLE_SUFFIX+db;
+        }else{
+            //TODO add more db support
+        }
+
+        connection.setAttribute("driverClass",driverName);
         connection.setAttribute("connectionURL",url);
         connection.setAttribute("userId",username);
         connection.setAttribute("password",password);
@@ -183,7 +195,7 @@ public class ConfigurationParser {
         context.appendChild(connection);
     }
 
-    public void parsePlugins(Map<String, Object> objectMap, Document document, Element context){
+    private void parsePlugins(Map<String, Object> objectMap, Document document, Element context){
         Map<String, Object> plugins = (Map<String, Object>) objectMap.get("plugins");
         Boolean comment = (Boolean) plugins.get("comment");
         Boolean lombok = (Boolean) plugins.get("lombok");
@@ -216,7 +228,7 @@ public class ConfigurationParser {
         context.appendChild(overridePlugin);
     }
 
-    public void disableDefaultComment(Document document, Element context){
+    private void disableDefaultComment(Document document, Element context){
         Element temp = document.createElement("commentGenerator");
         Element temp1 = document.createElement("property");
         temp1.setAttribute("name","suppressAllComments");
@@ -230,7 +242,7 @@ public class ConfigurationParser {
     }
 
 
-    public void setJavaTypeResolver(Map<String, Object> objectMap, Document document, Element context){
+    private void setJavaTypeResolver(Map<String, Object> objectMap, Document document, Element context){
         Boolean java8 = (Boolean) objectMap.get("java8");
         if(java8==null){
             java8=false;
@@ -248,7 +260,7 @@ public class ConfigurationParser {
     }
 
 
-    public void parseTargetPackage(Map<String, Object> objectMap, Document document, Element context){
+    private void parseTargetPackage(Map<String, Object> objectMap, Document document, Element context){
         Map<String, Object> targetPackage = (Map<String, Object>) objectMap.get("targetPackage");
         String modelPackage = (String) targetPackage.get("model");
         String mapperPackage = (String) targetPackage.get("mapper");
@@ -275,7 +287,7 @@ public class ConfigurationParser {
     }
 
 
-    public void parseTables(Map<String, Object> objectMap, Document document, Element context){
+    private void parseTables(Map<String, Object> objectMap, Document document, Element context){
         String mapperSuffixName = (String) objectMap.get("mapperSuffixName");
         List<String> tableNames = ( List<String>) objectMap.get("tables");
         for(String tableName : tableNames){

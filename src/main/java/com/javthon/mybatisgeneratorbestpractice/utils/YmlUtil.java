@@ -26,4 +26,18 @@ public class YmlUtil {
         return yaml.loadAs(is, Map.class);
     }
 
+    /**
+     * Load yml file from a specific file
+     */
+    public static Map<String,Object> getObjectMapFromSource(File file){
+        Yaml yaml = new Yaml();
+        InputStream is = null;
+        try {
+            is=new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(),e);
+        }
+        return yaml.loadAs(is, Map.class);
+    }
+
 }

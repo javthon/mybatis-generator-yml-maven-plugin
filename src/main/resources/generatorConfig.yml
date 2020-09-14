@@ -1,6 +1,8 @@
 mybatisGenerator:
     datasource:
-        url: jdbc:mysql://localhost:3306/test
+        type: mysql
+        address: localhost:3306
+        db: test
         username: root
         password: root
 
@@ -16,7 +18,7 @@ mybatisGenerator:
 
     plugins:
         comment: true
-        lombok: true
+        lombok: false
         swagger: false
         mapperAnnotation: false
         serializable: false
