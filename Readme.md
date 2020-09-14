@@ -91,9 +91,9 @@ tables|List||false|Multiple table names, see generatorConfig.yml sample and you'
 #### datasource configuration
 Attribute | Type | Required | Description
 --- | --- | --- |--- 
-type|String|是|database type, currently available values are mysql, sqlserver, if the database you use is not among them, please new issues
-address|String|是|IP and port number, such as: 192.168.1.1:3306
-db|String|是|database name
+type|String|true|database type, currently available values are mysql, sqlserver, if the database you use is not among them, please new issues
+address|String|true|IP and port number, such as: 192.168.1.1:3306
+db|String|true|database name
 username|String|true|database user
 password|String|true|database password
 
