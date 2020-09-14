@@ -39,7 +39,7 @@ Step 1: 确保您的工程是maven工程，在您的maven pom.xml文件中添加
     </configuration>
 </plugin>
 ```
-Step 2: 在`resources`目录下新建`generatorConfig.yml`，并将下方[完整配置样例](#完整配置样例)中的代码粘贴进去，按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 说明修改配置 <br> 
+Step 2: 在`resources`目录下新建`generatorConfig.yml`，并将下方[完整配置样例](#完整配置样例)中的代码粘贴进去，按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 说明修改配置 <br> <br>
 Step 3: 确保配置信息无误后运行`mvn mybatis-generator-yml:generate`，在Intellij IDEA中的maven窗口的plugins下可以找到这个命令，双击就能运行 
 
 
