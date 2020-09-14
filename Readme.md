@@ -39,7 +39,7 @@ Step 1: Make sure your project is a maven project, add the mybatis-generator-yml
     </configuration>
 </plugin>
 ```
-Step 2: Create a new `generatorConfig.yml` file in the `resources` directory, and paste the code in [Complete configuration example](#Complete configuration example) below, modify the configuration according to your understanding of the configuration in the source code, or modify the configuration according to the following [Configuration](#Configuration) instructions <br>
+Step 2: Create a new `generatorConfig.yml` file in the `resources` directory, and paste the code in [Complete configuration example](#Complete-configuration-example) below, modify the configuration according to your understanding of the configuration in the source code, or modify the configuration according to the following [Configuration](#Configuration) instructions <br>
 Step 3: Run `mvn mybatis-generator-yml:generate` after ensuring that the configuration information is correct. You can find this command under the plugins of the maven window in Intellij IDEA, and double-click it to run
 
 
