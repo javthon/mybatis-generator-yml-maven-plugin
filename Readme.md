@@ -23,13 +23,24 @@ English | [简体中文](https://github.com/javthon/mybatis-generator-bestpracti
 
 ## Environmental requirements
 - Make sure you have installed Java8 and a IDE such as Intellij Idea and Eclipse
-- To use lombok, you need to install the lombok plugin in the IDE  
+- Maven is used in the project
+- Mybatis3 is used in the project 
 
 
 ## How to use
-Step 1: Download the source code<br>
-Step 2: Modify the configuration according to your understanding of the configuration in the source code, or modify the configuration according to the following [Configuration](#Configuration) instructions <br>
-Step 3: Run Generator.java to generate code
+Step 1: Make sure your project is a maven project, add the mybatis-generator-yml-maven-plugin to your maven pom.xml file:<br>
+```
+<plugin>
+    <groupId>io.github.javthon</groupId>
+    <artifactId>mybatis-generator-yml-maven-plugin</artifactId>
+    <version>0.0.1</version>
+    <configuration>
+        <configurationFile>src/main/resources/generatorConfig.yml</configurationFile>
+    </configuration>
+</plugin>
+```
+Step 2: Create a new `generatorConfig.yml` file in the `resources` directory, and paste the code in [Complete configuration example](#Complete configuration example) below, modify the configuration according to your understanding of the configuration in the source code, or modify the configuration according to the following [Configuration](#Configuration) instructions <br>
+Step 3: Run `mvn mybatis-generator-yml:generate` after ensuring that the configuration information is correct. You can find this command under the plugins of the maven window in Intellij IDEA, and double-click it to run
 
 
 
@@ -38,7 +49,9 @@ Step 3: Run Generator.java to generate code
 ```
 mybatisGenerator:
     datasource:
-        url: jdbc:mysql://localhost:3306/test
+        type: mysql
+        address: localhost:3306
+        db: test
         username: root
         password: root
 
@@ -48,13 +61,13 @@ mybatisGenerator:
         javaXmlFilesSamePackage: true
 
     targetRuntime: MyBatis3
-    mapperSuffixName: dao
+    mapperSuffixName: mapper
     java8: false
     disableExample: true
 
     plugins:
         comment: true
-        lombok: true
+        lombok: false
         swagger: false
         mapperAnnotation: false
         serializable: false
@@ -66,7 +79,7 @@ mybatisGenerator:
 ### Configuration overview
 Attribute | Type | Default | Required | Description
 --- | --- | --- | --- |--- 
-datasource | Map |  | true | database connection information, details see "datasource Configuration" below, currently only supports mysql
+datasource | Map |  | true | database connection information, details see "datasource Configuration" below
 targetPackage| Map| | true| The package path of the generated code, see "targetPackage configuration" below
 targetRuntime| String| MyBatis3|true|mybatis generator targetRuntime,see targetRuntime options below
 mapperSuffixName|String|mapper|false|The suffix name of the mapper class or xml file. If this attribute is set to dao and the table name is user, it will generate UserDao.java and UserDao.xml. If targetRuntime is set to MyBatis3DynamicSql, this attribute will not work
@@ -78,7 +91,9 @@ tables|List||false|Multiple table names, see generatorConfig.yml sample and you'
 #### datasource configuration
 Attribute | Type | Required | Description
 --- | --- | --- |--- 
-url|String|true|database connection, for example：jdbc:mysql://localhost:3306/test currently only supports mysql
+type|String|是|database type, currently available values are mysql, sqlserver, if the database you use is not among them, please new issues
+address|String|是|IP and port number, such as: 192.168.1.1:3306
+db|String|是|database name
 username|String|true|database user
 password|String|true|database password
 
@@ -104,8 +119,9 @@ serializable|Boolean|false|whether to implement the Serializable interface
 Value|Description
 --- | ---
 MyBatis3DynamicSql|The generated code relies on the MyBatis dynamic SQL library. The generated code provides great flexibility for query construction. Does not generate XML. mybatis generator 1.4.0 officially recommends this method
-MyBatis3Simple|Generate mapper java interface and xml configuration file. There is no "by example" or "selective" method, the code is more concise
 MyBatis3|Generate mapper java interface and xml configuration file. There are "by example" or "selective" methods, the code is more verbose
+MyBatis3Simple|Generate mapper java interface and xml configuration file. There is no "by example" or "selective" method, the code is more concise
+
 
 ## Plugin Introduction
 #### Before using any plugin
@@ -237,7 +253,7 @@ public class Role {
 }
 ```
 #### Lombok Plugin
-No setter and getter, makes code clean：
+To use this plug-in, you need to add the dependency of lombok, and install the plug-in supported by the development tool for lombok. There is no setter and getter after using this plugin, which greatly simplifies the code:
 ```
 import java.util.Date;
 import lombok.Data;
@@ -262,7 +278,7 @@ public class Role {
 ```
 
 #### Swagger Plugin
-If you are using swagger2 in your project, this may be helpful：
+To use this plugin, you need to add swagger2 dependencies, if you are using swagger2 in your project, this may be helpful：
 ```
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -337,7 +353,6 @@ Make models implement the Serializable interface
 - Support more databases
 - Support more useful plugins
 - Explore the pros and cons of MyBatis3DynamicSql and MyBatis3
-- Make a maven plugin
 
 
 ## Contributing

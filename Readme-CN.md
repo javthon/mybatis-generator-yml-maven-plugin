@@ -23,13 +23,24 @@
 
 ## 环境要求
 - 安装好Java8和一个IDE 
-- 如要使用lombok，需要在IDE中安装lombok插件   
+- 项目中使用了maven
+- 项目中使用了Mybatis3  
 
 
 ## 如何使用
-Step 1: 下载源码<br>
-Step 2: 按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 说明修改配置 <br> 
-Step 3: 运行Generator.java生成代码 
+Step 1: 确保您的工程是maven工程，在您的maven pom.xml文件中添加mybatis-generator-yml-maven-plugin插件：
+```
+<plugin>
+    <groupId>io.github.javthon</groupId>
+    <artifactId>mybatis-generator-yml-maven-plugin</artifactId>
+    <version>0.0.1</version>
+    <configuration>
+        <configurationFile>src/main/resources/generatorConfig.yml</configurationFile>
+    </configuration>
+</plugin>
+```
+Step 2: 在`resources`目录下新建`generatorConfig.yml`，并将下方[完整配置样例](#完整配置样例)中的代码粘贴进去，按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 说明修改配置 <br> 
+Step 3: 确保配置信息无误后运行`mvn mybatis-generator-yml:generate`，在Intellij IDEA中的maven窗口的plugins下可以找到这个命令，双击就能运行 
 
 
 
@@ -38,7 +49,9 @@ Step 3: 运行Generator.java生成代码
 ```
 mybatisGenerator:
     datasource:
-        url: jdbc:mysql://localhost:3306/test
+        type: mysql
+        address: localhost:3306
+        db: test
         username: root
         password: root
 
@@ -48,13 +61,13 @@ mybatisGenerator:
         javaXmlFilesSamePackage: true
 
     targetRuntime: MyBatis3
-    mapperSuffixName: dao
+    mapperSuffixName: mapper
     java8: false
     disableExample: true
 
     plugins:
         comment: true
-        lombok: true
+        lombok: false
         swagger: false
         mapperAnnotation: false
         serializable: false
@@ -66,7 +79,7 @@ mybatisGenerator:
 ### 配置概览
 属性 | 类型 | 默认值 | 是否必须 | 描述
 --- | --- | --- | --- |--- 
-datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置"，当前只支持mysql
+datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置"
 targetPackage| Map| | 是| 生成代码的包路径，见下方targetPackage配置
 targetRuntime| String| MyBatis3|是|mybatis generator生产代码的格式,见下方targetRuntime可选项
 mapperSuffixName|String|mapper|否|mapper类或xml文件的后缀名,如果将此属性设置为dao，并且表名是user，它将生成UserDao.java和UserDao.xml，如果targetRuntime设置为MyBatis3DynamicSql，则此属性将不起作用
@@ -78,7 +91,9 @@ tables|List||是|多个表格名，配置方式见generatorConfig.yml样例
 #### 数据源配置
 属性 | 类型 | 是否必须 | 描述
 --- | --- | --- |--- 
-url|String|是|数据库连接, 如：jdbc:mysql://localhost:3306/test 当前只支持mysql
+type|String|是|数据库类型, 当前可选值为mysql, sqlserver，如果您使用的数据库不在其中，请new issues
+address|String|是|IP和端口号，如：192.168.1.1:3306
+db|String|是|数据库名
 username|String|是|数据库用户名
 password|String|是|数据库密码
 
@@ -104,8 +119,8 @@ serializable|Boolean|否|是否实现Serializable接口
 值|描述
 --- | ---
 MyBatis3DynamicSql|生成的代码依赖于MyBatis动态SQL库。 生成的代码为查询构造提供了极大的灵活性。 不生成XML。mybatis generator 1.4.0官方推荐此方式
-MyBatis3Simple|生成mapper java接口和xml配置文件。没有"by example" 或者"selective"方法，代码较简洁
 MyBatis3|生成mapper java接口和xml配置文件。有"by example" 或者 "selective" 方法，代码比较啰嗦
+MyBatis3Simple|生成mapper java接口和xml配置文件。没有"by example" 或者"selective"方法，代码较简洁
 
 ## 插件介绍
 #### 未使用任何插件前代码
@@ -237,7 +252,7 @@ public class Role {
 }
 ```
 #### lombok插件
-使用后没有setter和getter，大大简化了代码：
+使用本插件需要加入lombok的依赖，并且要安装开发工具对lombok支持的插件。使用本插件后没有setter和getter，大大简化了代码：
 ```
 import java.util.Date;
 import lombok.Data;
@@ -262,7 +277,7 @@ public class Role {
 ```
 
 #### swagger插件
-项目中使用swagger2作为接口测试框架的可以使用此插件：
+使用本插件需要加入swagger2的依赖，项目中使用swagger2作为接口测试框架的可以使用此插件：
 ```
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -337,7 +352,6 @@ model实现了Serializable接口
 - 支持更多数据库
 - 支持更多实用的插件
 - 探索MyBatis3DynamicSql和MyBatis3的优劣
-- 做成maven插件
 
 
 ## Contributing
