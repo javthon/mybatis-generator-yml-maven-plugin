@@ -8,7 +8,6 @@
 ## 内容
 - [环境要求](#环境要求)
 - [如何使用](#如何使用)
-- [配置](#配置)
 - [插件介绍](#插件介绍)
 - [待完善](#待完善)
 - [Contributing](#contributing)
@@ -32,7 +31,7 @@ Step 1: 确保您的工程是maven工程，在您的maven pom.xml文件中添加
     </configuration>
 </plugin>
 ```
-Step 2: 在`resources`目录下新建`generatorConfig.yml`，并将下方[完整配置样例](#完整配置样例)中的代码粘贴进去，按您对源码中配置的理解修改配置 或根据以下[配置](#配置) 说明修改配置 <br> <br>
+Step 2: 在`resources`目录下新建`generatorConfig.yml`，并将下方[完整配置样例](#完整配置样例)中的代码粘贴进去，按您对源码中配置的理解修改配置 或根据GitHub代码地址的配置说明修改配置 <br> <br>
 Step 3: 确保配置信息无误后运行`mvn mybatis-generator-yml:generate`，在Intellij IDEA中的maven窗口的plugins下可以找到这个命令，双击就能运行 
 
 
@@ -69,51 +68,7 @@ mybatisGenerator:
         - user
         - role
 ```
-### 配置概览
-| 属性 | 类型 | 默认值 | 是否必须 | 描述 |
-| --- | --- | --- | --- |--- |
-| datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置" |
-| targetPackage| Map| | 是| 生成代码的包路径，见下方targetPackage配置 |
-| targetRuntime| String| MyBatis3|是|mybatis generator生产代码的格式,见下方targetRuntime可选项 |
-| mapperSuffixName|String|mapper|否|mapper类或xml文件的后缀名,如果将此属性设置为dao，并且表名是user，它将生成UserDao.java和UserDao.xml，如果targetRuntime设置为MyBatis3DynamicSql，则此属性将不起作用 |
-| java8|Boolean|false|否|如果为true，则生成模型日期字段将使用Java8的LocalDateTime或LocalDate，否则使用Date|
-|disableExample|Boolean|true|否|此属性仅在targetRuntime为MyBatis3生效，为true时mapper不生成"by example"代码|
-| plugins|Map||否| 配置是否开启注释, lombok, swagger, mapperAnnotation, serializable等插件, 详情见下方插件配置|
-|tables|List||是|多个表格名，配置方式见generatorConfig.yml样例|
 
-#### 数据源配置
-属性 | 类型 | 是否必须 | 描述
---- | --- | --- |--- 
-type|String|是|数据库类型, 当前可选值为mysql, sqlserver，如果您使用的数据库不在其中，请new issues
-address|String|是|IP和端口号，如：192.168.1.1:3306
-db|String|是|数据库名
-username|String|是|数据库用户名
-password|String|是|数据库密码
-
-
-#### targetPackage配置
-属性 | 类型 | 是否必须 | 描述   
---- | --- | --- |--- 
-model|String|否|生成模型的包路径, 如：com.example.domain
-mapper|String|否|生成的java接口和xml mapper的包路径, 如:com.example.mapper
-javaXmlFilesSamePackage|Boolean|否|如果是true，java接口和xml mapper会生成在一个包下，如果是false，xml mapper代码将生成至resources目录下，该属性仅在targetRuntime为MyBatis3Simple或MyBatis3时可用
-
-
-#### 插件配置
-属性 | 类型 | 是否必须 | 描述   
---- | --- | --- |--- 
-comment|Boolean|否|是否开启model的注释
-lombok|Boolean|否|是否使用lombok，不生成setter和getter
-swagger|Boolean|否|是否使用swagger2注解
-mapperAnnotation|Boolean|否|是否在mapper类上加@Mapper注解
-serializable|Boolean|否|是否实现Serializable接口
-
-#### targetRuntime的可选值
-值|描述
---- | ---
-MyBatis3DynamicSql|生成的代码依赖于MyBatis动态SQL库。 生成的代码为查询构造提供了极大的灵活性。 不生成XML。mybatis generator 1.4.0官方推荐此方式
-MyBatis3|生成mapper java接口和xml配置文件。有"by example" 或者 "selective" 方法，代码比较啰嗦
-MyBatis3Simple|生成mapper java接口和xml配置文件。没有"by example" 或者"selective"方法，代码较简洁
 
 ## 插件介绍
 #### 未使用任何插件前代码
