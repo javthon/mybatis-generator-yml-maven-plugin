@@ -70,16 +70,16 @@ mybatisGenerator:
         - role
 ```
 ### 配置概览
-属性 | 类型 | 默认值 | 是否必须 | 描述
---- | --- | --- | --- |--- 
-datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置"
-targetPackage| Map| | 是| 生成代码的包路径，见下方targetPackage配置
-targetRuntime| String| MyBatis3|是|mybatis generator生产代码的格式,见下方targetRuntime可选项
-mapperSuffixName|String|mapper|否|mapper类或xml文件的后缀名,如果将此属性设置为dao，并且表名是user，它将生成UserDao.java和UserDao.xml，如果targetRuntime设置为MyBatis3DynamicSql，则此属性将不起作用
-java8|Boolean|false|否|如果为true，则生成模型日期字段将使用Java8的LocalDateTime或LocalDate，否则使用Date
-disableExample|Boolean|true|否|此属性仅在targetRuntime为MyBatis3生效，为true时mapper不生成"by example"代码
-plugins|Map||否| 配置是否开启注释, lombok, swagger, mapperAnnotation, serializable等插件, 详情见下方插件配置
-tables|List||是|多个表格名，配置方式见generatorConfig.yml样例
+| 属性 | 类型 | 默认值 | 是否必须 | 描述 |
+| --- | --- | --- | --- |--- |
+| datasource | Map |  | 是 | 数据库的连接信息, 见下方的"数据源配置" |
+| targetPackage| Map| | 是| 生成代码的包路径，见下方targetPackage配置 |
+| targetRuntime| String| MyBatis3|是|mybatis generator生产代码的格式,见下方targetRuntime可选项 |
+| mapperSuffixName|String|mapper|否|mapper类或xml文件的后缀名,如果将此属性设置为dao，并且表名是user，它将生成UserDao.java和UserDao.xml，如果targetRuntime设置为MyBatis3DynamicSql，则此属性将不起作用 |
+| java8|Boolean|false|否|如果为true，则生成模型日期字段将使用Java8的LocalDateTime或LocalDate，否则使用Date|
+|disableExample|Boolean|true|否|此属性仅在targetRuntime为MyBatis3生效，为true时mapper不生成"by example"代码|
+| plugins|Map||否| 配置是否开启注释, lombok, swagger, mapperAnnotation, serializable等插件, 详情见下方插件配置|
+|tables|List||是|多个表格名，配置方式见generatorConfig.yml样例|
 
 #### 数据源配置
 属性 | 类型 | 是否必须 | 描述
