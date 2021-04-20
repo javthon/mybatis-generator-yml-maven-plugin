@@ -4,6 +4,8 @@
 ![jdk](https://img.shields.io/badge/jdk-1.8%2B-blue.svg)
 ![language](https://img.shields.io/badge/language-java-yellow.svg)
 
+## 在线工具
+https://xxf.cool/tools/mybatisGenerator
 
 ## 造轮子目的
 - 使用yml配置来简化MyBatis Generator默认使用的xml配置
