@@ -4,6 +4,8 @@ English | [简体中文](https://github.com/javthon/mybatis-generator-bestpracti
 ![jdk](https://img.shields.io/badge/jdk-1.8%2B-blue.svg)
 ![language](https://img.shields.io/badge/language-java-yellow.svg)
 
+## Online tool
+https://xxf.cool/tools/mybatisGenerator
 
 ## Purpose
 - Use yml configuration to simplify the xml configuration used by MyBatis Generator by default
